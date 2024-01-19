@@ -1,9 +1,10 @@
 package org.stuff;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 public class Main {
     public static void main(String[] args) {
@@ -43,12 +44,25 @@ public class Main {
             add(request3);
             add(request4);
         }};
+
+        //token checker(list of auth tokens,token to check);
+        getResponses(validAuthTokens,requests);
     }
 
     //method to check url and returns list
     public static List<String> getResponses(List<String> valid_auth_tokens,
                                             List<List<String>> requests) {
         List<String> responses = new ArrayList<>();
+        Map<String,String> parameters = new HashMap<>();
+
+        for(int i = 0; i < requests.size(); i++) {
+            //for(int k = 0; k < requests.size(); k++) {
+                parameters = parameters(requests.get(i).get(1));
+                mapPrinter(parameters);
+            //}
+
+        }
+
         return responses;
     }
 
@@ -63,11 +77,35 @@ public class Main {
             String[] diffParameters = query.split("&"); //query part is split into different parameters
             for(String str : diffParameters) {
                 String[] sections = str.split("="); //splits each parameter into value and key, ex token and actual token
+                String temp = "+";
                 if(sections.length == 2) {
-                    queryParameters.put(sections[0],sections[1]);
+                    if(queryParameters.containsKey(sections[0])) {
+                        temp += "+";
+                        queryParameters.put(sections[0]+temp,sections[1]);
+                    }
+                    else {
+                        queryParameters.put(sections[0],sections[1]);
+                    }
                 }
             }
         }
         return queryParameters;
+    }
+
+    public static String validTokenChecker(List<String> authTokens,String token) {
+        for(String key : authTokens) {
+            if(token.equals(key)) return key;
+        }
+
+        return "hell0";
+    }
+
+    public static void mapPrinter(Map<String,String> stuff) {
+        System.out.println("MAP SIZE: " + stuff.size());
+        for(Map.Entry<String, String> entry : stuff.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            System.out.println("Key: " + key + ", Value: " + value);
+        }
     }
 }
