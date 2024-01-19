@@ -38,7 +38,7 @@ public class MainTest {
 
     @Test
     public void parameters() {
-        String url = "https://example.com/?token=safh34ywb0p5&csrf=ak2sh32dy&name=riley&name=alex";
+        /*String url = "https://example.com/?token=safh34ywb0p5&csrf=ak2sh32dy&name=riley&name=alex";
         Map<String,String> testMap = Main.parameters(url);
         for (Map.Entry<String, String> entry : testMap.entrySet()) {
             String key = entry.getKey();

@@ -57,8 +57,10 @@ public class Main {
 
         for(int i = 0; i < requests.size(); i++) {
             //for(int k = 0; k < requests.size(); k++) {
-                parameters = parameters(requests.get(i).get(1));
-                mapPrinter(parameters);
+                //parameters = parameters(requests.get(i).get(1));
+                //mapPrinter(parameters);
+                Parameters current = parameters(requests.get(i).get(1));
+                parametersPrinter(current);
             //}
 
         }
@@ -67,8 +69,9 @@ public class Main {
     }
 
     //url breakdown returns map
-    public static Map<String,String> parameters(String url) {
+    public static Parameters parameters(String url) {
         Map<String,String> queryParameters = new HashMap<>();
+        Parameters newParameters = new Parameters();
 
         int startX = url.indexOf('?');
         if(startX != -1) {
@@ -77,19 +80,24 @@ public class Main {
             String[] diffParameters = query.split("&"); //query part is split into different parameters
             for(String str : diffParameters) {
                 String[] sections = str.split("="); //splits each parameter into value and key, ex token and actual token
-                String temp = "+";
                 if(sections.length == 2) {
-                    if(queryParameters.containsKey(sections[0])) {
-                        temp += "+";
-                        queryParameters.put(sections[0]+temp,sections[1]);
+                    /*if(queryParameters.containsKey(sections[0])) {
+                        queryParameters.put(sections[0],sections[1]);
                     }
                     else {
                         queryParameters.put(sections[0],sections[1]);
+                    } */
+                    if(sections[0].equals("token")) newParameters.setToken(sections[1]);
+                    else if(sections[0].equals("csrf")) newParameters.setToken(sections[1]);
+                    else {
+                        newParameters.addToList(sections[0]);
+                        newParameters.addToList(sections[1]);
                     }
+
                 }
             }
         }
-        return queryParameters;
+        return newParameters;
     }
 
     public static String validTokenChecker(List<String> authTokens,String token) {
@@ -107,5 +115,15 @@ public class Main {
             String value = entry.getValue();
             System.out.println("Key: " + key + ", Value: " + value);
         }
+    }
+
+    public static void parametersPrinter(Parameters current) {
+        System.out.println("Token: " + current.getToken());
+        System.out.println("csrf: " + current.getCsrfToken());
+        List<String> list1 = current.getParameters();
+        for(String x : list1) {
+            System.out.print(x + " ");
+        }
+        System.out.println();
     }
 }

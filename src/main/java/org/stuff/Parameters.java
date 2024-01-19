@@ -1,11 +1,23 @@
 package org.stuff;
-
+import java.util.ArrayList;
 import java.util.List;
+
+/*
+    To store parameters of the url.
+    This is assuming each request does not have more than one token or csrf at the same time.
+    Other multiples of other parameters are alright.
+ */
 
 public class Parameters {
     private String token;
     private String csrfToken;
     private List<String> parameters;
+
+    public Parameters() {
+        this.token = null;
+        this.csrfToken = null;
+        this.parameters = new ArrayList<>();
+    }
 
     //NO csrf token
     public Parameters(String token, List<String> parameters) {
@@ -43,4 +55,9 @@ public class Parameters {
     public void setParameters(List<String> parameters) {
         this.parameters = parameters;
     }
+
+    public void addToList(String parameter) {
+        parameters.add(parameter);
+    }
+
 }
