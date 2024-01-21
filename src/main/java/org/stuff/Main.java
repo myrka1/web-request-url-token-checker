@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 public class Main {
+    private static ArrayList<String> results = new ArrayList<>();
     public static void main(String[] args) {
-        //System.out.println("Hello world!");
         //creation of parameters
         //list of tokens
         List<String> validAuthTokens = new ArrayList<>() {
@@ -46,32 +45,44 @@ public class Main {
         }};
 
         //token checker(list of auth tokens,token to check);
-        getResponses(validAuthTokens,requests);
+        List<String> responses = getResponses(validAuthTokens,requests);
+        System.out.println(responses.toString());
     }
 
     //method to check url and returns list
     public static List<String> getResponses(List<String> valid_auth_tokens,
                                             List<List<String>> requests) {
+
         List<String> responses = new ArrayList<>();
-        Map<String,String> parameters = new HashMap<>();
 
         for(int i = 0; i < requests.size(); i++) {
-            //for(int k = 0; k < requests.size(); k++) {
-                //parameters = parameters(requests.get(i).get(1));
-                //mapPrinter(parameters);
-                Parameters current = parameters(requests.get(i).get(1));
-                parametersPrinter(current);
-            //}
+            Request current = parameters(requests.get(i).get(0),requests.get(i).get(1));
 
+            //send request to check each one
+            if(current.getType().equals("GET") && valid_auth_tokens.contains(current.getToken())) {
+                responses.add("VALID");
+                for(String x : current.getParameters()) {
+                    responses.add(x);
+                }
+            }
+            else if(current.getType().equals("POST") &&
+                    valid_auth_tokens.contains(current.getToken())
+                    && current.getCsrfToken() != null
+                    && TokenChecker.checkCSRF(current.getCsrfToken()))
+            {
+                responses.add("VALID");
+                for(String x : current.getParameters()) {
+                    responses.add(x);
+                }
+            }
+            else responses.add("INVALID");
         }
-
         return responses;
     }
 
-    //url breakdown returns map
-    public static Parameters parameters(String url) {
-        Map<String,String> queryParameters = new HashMap<>();
-        Parameters newParameters = new Parameters();
+    //url breakdown returns Request object
+    public static Request parameters(String type, String url) {
+        Request newRequest = new Request();
 
         int startX = url.indexOf('?');
         if(startX != -1) {
@@ -81,49 +92,19 @@ public class Main {
             for(String str : diffParameters) {
                 String[] sections = str.split("="); //splits each parameter into value and key, ex token and actual token
                 if(sections.length == 2) {
-                    /*if(queryParameters.containsKey(sections[0])) {
-                        queryParameters.put(sections[0],sections[1]);
-                    }
+                    if(sections[0].equals("token")) newRequest.setToken(sections[1]);
+                    else if(sections[0].equals("csrf")) newRequest.setCsrfToken(sections[1]);
                     else {
-                        queryParameters.put(sections[0],sections[1]);
-                    } */
-                    if(sections[0].equals("token")) newParameters.setToken(sections[1]);
-                    else if(sections[0].equals("csrf")) newParameters.setToken(sections[1]);
-                    else {
-                        newParameters.addToList(sections[0]);
-                        newParameters.addToList(sections[1]);
+                        newRequest.addToList(sections[0]);
+                        newRequest.addToList(sections[1]);
                     }
-
                 }
             }
+            newRequest.setType(type); //sets type of request
         }
-        return newParameters;
+        return newRequest;
     }
 
-    public static String validTokenChecker(List<String> authTokens,String token) {
-        for(String key : authTokens) {
-            if(token.equals(key)) return key;
-        }
 
-        return "hell0";
-    }
 
-    public static void mapPrinter(Map<String,String> stuff) {
-        System.out.println("MAP SIZE: " + stuff.size());
-        for(Map.Entry<String, String> entry : stuff.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            System.out.println("Key: " + key + ", Value: " + value);
-        }
-    }
-
-    public static void parametersPrinter(Parameters current) {
-        System.out.println("Token: " + current.getToken());
-        System.out.println("csrf: " + current.getCsrfToken());
-        List<String> list1 = current.getParameters();
-        for(String x : list1) {
-            System.out.print(x + " ");
-        }
-        System.out.println();
-    }
 }

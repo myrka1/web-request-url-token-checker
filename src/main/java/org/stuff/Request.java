@@ -8,28 +8,38 @@ import java.util.List;
     Other multiples of other parameters are alright.
  */
 
-public class Parameters {
+public class Request {
+    private String type; //type of request ex. POST
     private String token;
     private String csrfToken;
     private List<String> parameters;
 
-    public Parameters() {
+    public Request() {
+        this.type = null;
         this.token = null;
         this.csrfToken = null;
         this.parameters = new ArrayList<>();
     }
 
     //NO csrf token
-    public Parameters(String token, List<String> parameters) {
+    public Request(String token, List<String> parameters) {
         this.token = token;
         this.parameters = parameters;
     }
 
     //with csrf token
-    public Parameters(String token, String csrfToken, List<String> parameters) {
+    public Request(String token, String csrfToken, List<String> parameters) {
         this.token = token;
         this.csrfToken = csrfToken;
         this.parameters = parameters;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getToken() {
@@ -60,4 +70,15 @@ public class Parameters {
         parameters.add(parameter);
     }
 
+    //print parameters list
+    public static void printParameters(Request current) {
+        System.out.println("Type: " + current.type);
+        System.out.println("Token: " + current.getToken());
+        System.out.println("csrf: " + current.getCsrfToken());
+        List<String> list1 = current.getParameters();
+        for(String x : list1) {
+            System.out.print(x + " ");
+        }
+        System.out.println();
+    }
 }
