@@ -2,8 +2,6 @@ package org.stuff;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 
 public class Main {
     private static ArrayList<String> results = new ArrayList<>();
@@ -17,9 +15,6 @@ public class Main {
                 add("ba34wyi8t902");
             }
         };
-        /* validAuthTokens.add("ah37j2ha483u");
-        validAuthTokens.add("safh34ywb0p5");
-        validAuthTokens.add("ba34wyi8t902"); */
         List<String> request1 = new ArrayList<>() {{
             add("GET");
             add("https://example.com/?token=347sd6yk8iu2&name=alex");
@@ -104,7 +99,4 @@ public class Main {
         }
         return newRequest;
     }
-
-
-
 }
