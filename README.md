@@ -1,6 +1,6 @@
 # Request Validator
 
-A Java application to validate HTTP requests and responses based on authentication tokens and CSRF tokens.
+A Java program to validate HTTP requests and responses based on authentication tokens and CSRF tokens.
 
 ## Introduction
 The Request Validator is a Java application designed to check the validity of HTTP requests and responses. It focuses on authentication tokens and CSRF tokens to ensure secure and valid communication.
